@@ -37,7 +37,7 @@ exec runuser -u pi -- env \
             tmux attach-session -t main
         else
             tmux new-session -d -s main -c /workspace
-            tmux send-keys -t main "pi --provider llama-cpp --model qwen || echo '  → Набери pi чтобы запустить снова'" Enter
+            tmux send-keys -t main "pi --provider llama-cpp --model qwen || echo Набери pi чтобы запустить снова" Enter
             tmux attach-session -t main
         fi
     '
