@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+# Дать пользователю pi доступ к docker.sock
+if [ -S /var/run/docker.sock ]; then
+    HOST_DOCKER_GID=$(stat -c '%g' /var/run/docker.sock)
+    if ! getent group "$HOST_DOCKER_GID" >/dev/null; then
+        groupadd -g "$HOST_DOCKER_GID" dockerhost
+    fi
+    usermod -aG "$HOST_DOCKER_GID" pi
+fi
+
 # Первый запуск: volume пуст — скопировать дефолтные конфиги
 mkdir -p /home/pi/.pi/agent
 if [ ! -f /home/pi/.pi/agent/models.json ]; then
