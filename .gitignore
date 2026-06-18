@@ -3,5 +3,6 @@
 caddy-addon/
 
 # Pi config — хранится локально
+agent/
 sessions/
 state/
