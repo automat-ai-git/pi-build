@@ -1,4 +1,5 @@
 .env
+.claude/
 caddy-addon/
 
 # Pi config — хранится локально
