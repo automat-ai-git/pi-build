@@ -3,30 +3,36 @@ set -e
 
 chown -R pi:workspace_users /home/pi/.pi 2>/dev/null || true
 
-cat > /etc/pi-init << 'EOF'
-[ -f ~/.bashrc ] && source ~/.bashrc
+# Баннер при входе в bash
+cat > /home/pi/.pi-banner << 'BANNER'
 
-echo ""
-echo "  ══════════════════════════════════════"
-echo "  π  Pi Coding Agent"
-echo "  ══════════════════════════════════════"
-echo "  pi                — запустить сессию"
-echo "  pi -c             — продолжить последнюю"
-echo "  pi -r             — выбрать из прошлых"
-echo "  pi --help         — все команды"
-echo "  ──────────────────────────────────────"
-echo "  tmux: Ctrl+B, C  — новое окно"
-echo "         Ctrl+B, N — следующее окно"
-echo "         Ctrl+B, D — отсоединиться"
-echo "  ══════════════════════════════════════"
-echo ""
-EOF
+  ══════════════════════════════════════
+  π  Pi Coding Agent (llama.cpp)
+  ══════════════════════════════════════
+  tmux: Ctrl+B, C  — новое окно
+         Ctrl+B, N — следующее окно
+         Ctrl+B, D — отсоединиться
+  ══════════════════════════════════════
 
-# ttyd → tmux: каждое подключение через браузер аттачится к общей
-# tmux-сессии "main", либо создаёт новую если её нет.
-# Это позволяет запускать несколько pi параллельно в разных окнах tmux.
+BANNER
+chown pi:workspace_users /home/pi/.pi-banner
+
+# Добавить баннер в .bashrc если ещё нет
+grep -q 'pi-banner' /home/pi/.bashrc 2>/dev/null || \
+    echo 'cat ~/.pi-banner 2>/dev/null' >> /home/pi/.bashrc
+
+# ttyd → tmux: каждое подключение аттачится к сессии "main".
+# При первом старте tmux автоматически запускает Pi с llama.cpp.
 exec runuser -u pi -- env \
     HOME=/home/pi \
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
     ttyd -p 7681 -W \
-    tmux new-session -A -s main -c /workspace
+    bash -c '
+        if tmux has-session -t main 2>/dev/null; then
+            tmux attach-session -t main
+        else
+            tmux new-session -d -s main -c /workspace
+            tmux send-keys -t main "pi --provider llama-cpp --model qwen" Enter
+            tmux attach-session -t main
+        fi
+    '
