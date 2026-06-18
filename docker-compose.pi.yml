@@ -1,0 +1,37 @@
+networks:
+  localai_default:
+    external: true
+
+services:
+  pi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pi
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    group_add:
+      - "${DOCKER_GID:-999}"
+      - "2000"
+    networks:
+      - localai_default
+    ports:
+      - "7683:7681"
+    volumes:
+      - ${HOME}/workspace:/workspace
+      - ${HOME}/pi/agent:/home/pi/.pi/agent
+      - ${HOME}:/home/pi/host_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOME=/home/pi
+
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+
+      - PI_TELEMETRY=false
+      - PI_SKIP_VERSION_CHECK=true
+
+      - PLANE_API_KEY=${PLANE_API_KEY:-}
+      - PLANE_WORKSPACE_SLUG=${PLANE_WORKSPACE_SLUG:-}
+      - PLANE_BASE_URL=${PLANE_BASE_URL:-}

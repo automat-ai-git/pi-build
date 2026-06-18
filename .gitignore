@@ -1,0 +1,6 @@
+.env
+caddy-addon/
+
+# Pi config — хранится локально
+sessions/
+state/
