@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e
 
-chown -R pi:workspace_users /home/pi/.pi 2>/dev/null || true
+# Первый запуск: volume пуст — скопировать дефолтные конфиги
+mkdir -p /home/pi/.pi/agent
+if [ ! -f /home/pi/.pi/agent/models.json ]; then
+    cp /home/pi/.pi-defaults/models.json /home/pi/.pi/agent/models.json
+fi
+chown -R pi:workspace_users /home/pi/.pi
 
 # Баннер при входе в bash
 cat > /home/pi/.pi-banner << 'BANNER'
