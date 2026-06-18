@@ -12,10 +12,18 @@ RUN apt-get update && apt-get install -y \
     nano \
     jq \
     docker.io \
+    locales \
+    fonts-liberation \
+    fonts-dejavu-core \
     && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/ru_RU.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen
+
+ENV LANG=ru_RU.UTF-8
+ENV LC_ALL=ru_RU.UTF-8
 
 RUN groupadd -g 2000 workspace_users && \
     useradd -u 1002 -g 2000 -m -s /bin/bash pi
