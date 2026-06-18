@@ -28,5 +28,10 @@ RUN chmod +x /entrypoint.sh
 COPY tmux.conf /home/pi/.tmux.conf
 RUN chown pi:workspace_users /home/pi/.tmux.conf
 
+# Pre-configured Ollama provider (ollama:11434 in localai_default network)
+RUN mkdir -p /home/pi/.pi/agent
+COPY models.json /home/pi/.pi/agent/models.json
+RUN chown -R pi:workspace_users /home/pi/.pi
+
 WORKDIR /workspace
 ENTRYPOINT ["/entrypoint.sh"]
