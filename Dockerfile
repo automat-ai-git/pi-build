@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     ripgrep \
-    tmux \
     ttyd \
     procps \
     nano \
@@ -15,12 +14,18 @@ RUN apt-get update && apt-get install -y \
     locales \
     fonts-liberation \
     fonts-dejavu-core \
+    libevent-dev libncurses-dev build-essential bison pkg-config \
     && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/ru_RU.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
+
+# tmux 3.5a из исходников (Ubuntu 24.04 даёт только 3.4)
+RUN curl -fsSL https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz | tar xz \
+    && cd tmux-3.5a && ./configure && make -j$(nproc) && make install \
+    && cd .. && rm -rf tmux-3.5a
 
 ENV LANG=ru_RU.UTF-8
 ENV LC_ALL=ru_RU.UTF-8
