@@ -41,12 +41,4 @@ exec runuser -u pi -- env \
     HOME=/home/pi \
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
     ttyd -p 7681 -W \
-    bash -c '
-        if tmux has-session -t main 2>/dev/null; then
-            tmux attach-session -t main
-        else
-            tmux new-session -d -s main -c /workspace
-            tmux send-keys -t main "pi --provider llama-cpp --model qwen || echo Набери pi чтобы запустить снова" Enter
-            tmux attach-session -t main
-        fi
-    '
+    bash -c 'tmux attach || tmux new -s main -c /workspace'
