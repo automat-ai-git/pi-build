@@ -8,6 +8,10 @@
 cp .env.example .env
 # Заполнить ANTHROPIC_API_KEY в .env
 
+cp models.json.example models.json
+cp settings.json.example settings.json
+# Отредактировать под свою машину (провайдеры, модели, URL-ы)
+
 docker compose -f docker-compose.pi.yml up --build -d
 ```
 

@@ -60,8 +60,8 @@ RUN chown pi:workspace_users /home/pi/.tmux.conf
 
 # Defaults (copied to volume on first run by entrypoint)
 RUN mkdir -p /home/pi/.pi-defaults
-COPY models.json /home/pi/.pi-defaults/models.json
-COPY settings.json /home/pi/.pi-defaults/settings.json
+COPY models.json.example /home/pi/.pi-defaults/models.json
+COPY settings.json.example /home/pi/.pi-defaults/settings.json
 RUN chown -R pi:workspace_users /home/pi/.pi-defaults
 
 WORKDIR /workspace

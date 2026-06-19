@@ -6,3 +6,5 @@ caddy-addon/
 agent/
 sessions/
 state/
+settings.json
+models.json
