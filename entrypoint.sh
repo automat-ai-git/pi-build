@@ -41,4 +41,4 @@ exec runuser -u pi -- env \
     HOME=/home/pi \
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
     ttyd -p 7681 -W \
-    bash -c 'tmux attach || tmux new -s main -c /workspace'
+    bash -c 'tmux attach -d || tmux new -s main -c /workspace'
