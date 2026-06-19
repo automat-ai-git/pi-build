@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     ripgrep \
+    fd-find \
     ttyd \
     procps \
     nano \
@@ -48,6 +49,9 @@ RUN groupadd -g 2000 workspace_users && \
 
 # Pi coding agent (--ignore-scripts per official docs)
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+# fd-find ставится как fdfind, Pi ищет fd
+RUN ln -s /usr/bin/fdfind /usr/local/bin/fd
 
 COPY yank /usr/local/bin/yank
 RUN chmod +x /usr/local/bin/yank
