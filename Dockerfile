@@ -49,6 +49,9 @@ RUN groupadd -g 2000 workspace_users && \
 # Pi coding agent (--ignore-scripts per official docs)
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 
+COPY yank /usr/local/bin/yank
+RUN chmod +x /usr/local/bin/yank
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
