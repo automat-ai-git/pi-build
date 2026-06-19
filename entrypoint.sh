@@ -15,6 +15,9 @@ mkdir -p /home/pi/.pi/agent
 if [ ! -f /home/pi/.pi/agent/models.json ]; then
     cp /home/pi/.pi-defaults/models.json /home/pi/.pi/agent/models.json
 fi
+if [ ! -f /home/pi/.pi/agent/settings.json ]; then
+    cp /home/pi/.pi-defaults/settings.json /home/pi/.pi/agent/settings.json
+fi
 chown -R pi:workspace_users /home/pi/.pi
 
 # Баннер при входе в bash
