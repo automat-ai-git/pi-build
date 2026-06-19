@@ -27,6 +27,19 @@ RUN curl -fsSL https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar
     && cd tmux-3.5a && ./configure && make -j$(nproc) && make install \
     && cd .. && rm -rf tmux-3.5a
 
+# ttyd frontend с поддержкой OSC52 (буфер обмена браузера)
+# apt-версия ttyd (1.7.x) не имеет @xterm/addon-clipboard,
+# поэтому собираем фронтенд из main ветки и подаём через -I
+RUN git clone --depth 1 https://github.com/tsl0922/ttyd.git /tmp/ttyd-src \
+    && cd /tmp/ttyd-src/html \
+    && corepack enable \
+    && corepack prepare yarn@3.6.3 --activate \
+    && yarn install \
+    && yarn build \
+    && npx gulp inline \
+    && cp dist/inline.html /usr/share/ttyd-index.html \
+    && cd / && rm -rf /tmp/ttyd-src
+
 ENV LANG=ru_RU.UTF-8
 ENV LC_ALL=ru_RU.UTF-8
 

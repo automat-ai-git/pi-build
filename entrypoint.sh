@@ -26,9 +26,13 @@ cat > /home/pi/.pi-banner << 'BANNER'
   ══════════════════════════════════════
   π  Pi Coding Agent (llama.cpp)
   ══════════════════════════════════════
+  Копировать: Shift + выделить мышью
+              затем правый клик > Copy
+  Вставить:   правый клик > Paste
+  ──────────────────────────────────────
   tmux: Ctrl+B, C  — новое окно
-         Ctrl+B, N — следующее окно
-         Ctrl+B, D — отсоединиться
+        Ctrl+B, N  — следующее окно
+        Ctrl+B, D  — отсоединиться
   ══════════════════════════════════════
 
 BANNER
@@ -43,5 +47,5 @@ grep -q 'pi-banner' /home/pi/.bashrc 2>/dev/null || \
 exec runuser -u pi -- env \
     HOME=/home/pi \
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-    ttyd -p 7681 -W \
+    ttyd -p 7681 -W -I /usr/share/ttyd-index.html \
     bash -c 'tmux attach -d || tmux new -s main -c /workspace'
