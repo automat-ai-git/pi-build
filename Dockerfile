@@ -41,6 +41,12 @@ RUN git clone --depth 1 https://github.com/tsl0922/ttyd.git /tmp/ttyd-src \
     && cp dist/inline.html /usr/share/ttyd-index.html \
     && cd / && rm -rf /tmp/ttyd-src
 
+# Docker Compose plugin (agent manages compose stacks via docker.sock)
+RUN mkdir -p /usr/local/lib/docker/cli-plugins && \
+    curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" \
+    -o /usr/local/lib/docker/cli-plugins/docker-compose && \
+    chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
 ENV LANG=ru_RU.UTF-8
 ENV LC_ALL=ru_RU.UTF-8
 
