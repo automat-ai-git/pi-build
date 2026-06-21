@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     locales \
     fonts-liberation \
     fonts-dejavu-core \
+    python3-pip \
     libevent-dev libncurses-dev build-essential bison pkg-config \
     && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
@@ -58,6 +59,9 @@ RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 
 # fd-find ставится как fdfind, Pi ищет fd
 RUN ln -s /usr/bin/fdfind /usr/local/bin/fd
+
+# Graphify — скилл для Pi (knowledge graph queries)
+RUN pip3 install --break-system-packages graphifyy
 
 COPY yank /usr/local/bin/yank
 RUN chmod +x /usr/local/bin/yank
