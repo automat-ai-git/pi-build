@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     locales \
     fonts-liberation \
     fonts-dejavu-core \
+    sudo \
     python3-pip \
     libevent-dev libncurses-dev build-essential bison pkg-config \
     && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
@@ -52,7 +53,9 @@ ENV LANG=ru_RU.UTF-8
 ENV LC_ALL=ru_RU.UTF-8
 
 RUN groupadd -g 2000 workspace_users && \
-    useradd -u 1002 -g 2000 -m -s /bin/bash pi
+    useradd -u 1002 -g 2000 -m -s /bin/bash pi && \
+    echo "pi ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/pi && \
+    chmod 0440 /etc/sudoers.d/pi
 
 # Pi coding agent (--ignore-scripts per official docs)
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
@@ -78,5 +81,26 @@ COPY models.json.example /home/pi/.pi-defaults/models.json
 COPY settings.json.example /home/pi/.pi-defaults/settings.json
 RUN chown -R pi:workspace_users /home/pi/.pi-defaults
 
+# Баннер при входе в bash
+RUN cat > /home/pi/.pi-banner << 'BANNER'
+
+  ══════════════════════════════════════
+  π  Pi Coding Agent (llama.cpp)
+  ══════════════════════════════════════
+  Копировать: выделить мышью, отпустить
+  Вставить:   правый клик > Paste
+  ──────────────────────────────────────
+  tmux: Ctrl+B, C  — новое окно
+        Ctrl+B, N  — следующее окно
+        Ctrl+B, D  — отсоединиться
+  ══════════════════════════════════════
+
+BANNER
+RUN chown pi:workspace_users /home/pi/.pi-banner && \
+    grep -q 'pi-banner' /home/pi/.bashrc 2>/dev/null || \
+    echo 'cat ~/.pi-banner 2>/dev/null' >> /home/pi/.bashrc && \
+    chown pi:workspace_users /home/pi/.bashrc
+
+USER pi
 WORKDIR /workspace
 ENTRYPOINT ["/entrypoint.sh"]
