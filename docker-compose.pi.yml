@@ -19,9 +19,9 @@ services:
     ports:
       - "7683:7681"
     volumes:
-      - ${HOME}/workspace:/workspace
+      - ${HOST_HOME}/workspace:/workspace
       - ./agent:/home/pi/.pi/agent
-      - ${HOME}:/home/pi/host_home
+      - ${HOST_HOME}:/home/pi/host_home
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/e/meeting-data:/meeting-data:ro
     extra_hosts:

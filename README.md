@@ -6,7 +6,7 @@
 
 ```bash
 cp .env.example .env
-# Заполнить ANTHROPIC_API_KEY в .env
+# Заполнить ANTHROPIC_API_KEY и HOST_HOME в .env
 
 cp models.json.example models.json
 cp settings.json.example settings.json
