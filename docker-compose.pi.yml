@@ -20,8 +20,8 @@ services:
       - "7683:7681"
     volumes:
       - ${HOST_HOME}/workspace:/workspace
-      - ./agent:/home/pi/.pi/agent
-      - ${HOST_HOME}:/home/pi/host_home
+      - ${HOST_HOME}/pi-build/agent:/home/pi/.pi/agent
+      - ${HOST_HOME}:/host
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/e/meeting-data:/meeting-data:ro
     extra_hosts:
