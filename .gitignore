@@ -1,4 +1,9 @@
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
 .claude/
 caddy-addon/
 
