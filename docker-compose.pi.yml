@@ -29,6 +29,7 @@ services:
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - HOME=/home/pi
+      - HOST_HOME=${HOST_HOME}
 
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
 
