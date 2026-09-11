@@ -7,6 +7,12 @@
 ```bash
 cp .env.example .env
 # Заполнить ANTHROPIC_API_KEY и HOST_HOME в .env
+# HOST_HOME — абсолютный путь к домашней папке на хосте, без завершающего слэша:
+echo "HOST_HOME=$HOME" >> .env
+echo "DOCKER_GID=$(stat -c '%g' /var/run/docker.sock)" >> .env
+
+# Папки, которые монтируются в контейнер (чтобы Docker не создал их от root)
+mkdir -p ~/workspace ~/pi-build/agent
 
 cp models.json.example models.json
 cp settings.json.example settings.json
@@ -16,6 +22,12 @@ docker compose -f docker-compose.pi.yml up --build -d
 ```
 
 Открыть: http://localhost:7683
+
+> **Важно:** файл `.env` в `.gitignore` и не приезжает с `git clone`/`git pull`.
+> На каждой новой машине его нужно создать заново. Если `HOST_HOME` не задан,
+> `docker compose` упадёт с понятным сообщением (а не с `invalid spec: :/host`).
+> Проверить, что переменные подхватились:
+> `docker compose -f docker-compose.pi.yml config | grep -A2 volumes`
 
 ## Что внутри
 

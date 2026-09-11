@@ -19,7 +19,7 @@ services:
     ports:
       - "7683:7681"
     volumes:
-      - ${HOST_HOME}/workspace:/workspace
+      - ${HOST_HOME:?HOST_HOME не задан — скопируй .env.example в .env и укажи HOST_HOME}/workspace:/workspace
       - ${HOST_HOME}/pi-build/agent:/home/pi/.pi/agent
       - ${HOST_HOME}:/host
       - /var/run/docker.sock:/var/run/docker.sock
