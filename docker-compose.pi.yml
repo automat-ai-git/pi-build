@@ -2,11 +2,6 @@ networks:
   localai_default:
     external: true
 
-volumes:
-  tg_socket_data:
-    external: true
-    name: tg-cli_tg_socket_data
-
 services:
   pi:
     build:
@@ -29,14 +24,12 @@ services:
       - ${HOST_HOME}:/host
       - /var/run/docker.sock:/var/run/docker.sock
       - ${MEETING_DATA:-/dev/null}:/meeting-data:ro
-      - tg_socket_data:/tmp/tg-socket   # общий Unix-сокет tg-cli daemon (volume tg-cli_tg_socket_data)
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - HOME=/home/pi
       - HOST_HOME=${HOST_HOME}
-      - TG_DAEMON_SOCKET=/tmp/tg-socket/tg-cli.sock
 
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
 
