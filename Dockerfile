@@ -25,16 +25,23 @@ RUN apt-get update && apt-get install -y \
     && sed -i '/ru_RU.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
 
-# tmux 3.5a из исходников (Ubuntu 24.04 даёт только 3.4)
-RUN curl -fsSL https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz | tar xz \
-    && cd tmux-3.5a && ./configure && make -j$(nproc) && make install \
-    && cd .. && rm -rf tmux-3.5a
+# tmux из исходников (Ubuntu 24.04 даёт только 3.4; extended-keys требует 3.5+).
+# Версия на копирование не влияет — 3.5a и 3.8 ведут себя одинаково
+RUN curl -fsSL https://github.com/tmux/tmux/releases/download/3.8/tmux-3.8.tar.gz | tar xz \
+    && cd tmux-3.8 && ./configure && make -j$(nproc) && make install \
+    && cd .. && rm -rf tmux-3.8
 
 # ttyd frontend с поддержкой OSC52 (буфер обмена браузера)
 # apt-версия ttyd (1.7.x) не имеет @xterm/addon-clipboard,
-# поэтому собираем фронтенд из main ветки и подаём через -I
+# поэтому собираем фронтенд из main ветки и подаём через -I.
+# + патч ttyd#1565: браузер молча отбрасывает navigator.clipboard.writeText()
+# без user activation, а OSC52 прилетает по WebSocket без клика. Патч
+# регистрирует обработчик OSC52 через document.execCommand('copy') —
+# копирование мышью работает без жеста и на обычном http (PR не влит в upstream)
 RUN git clone --depth 1 https://github.com/tsl0922/ttyd.git /tmp/ttyd-src \
-    && cd /tmp/ttyd-src/html \
+    && cd /tmp/ttyd-src \
+    && curl -fsSL https://patch-diff.githubusercontent.com/raw/tsl0922/ttyd/pull/1565.diff | git apply \
+    && cd html \
     && corepack enable \
     && corepack prepare yarn@3.6.3 --activate \
     && yarn install \
@@ -87,8 +94,9 @@ RUN cat > /home/pi/.pi-banner << 'BANNER'
   ══════════════════════════════════════
   π  Pi Coding Agent (llama.cpp)
   ══════════════════════════════════════
-  Копировать: выделить мышью, отпустить
-  Вставить:   правый клик > Paste
+  Копировать:  выделить мышью, отпустить
+  В сессии:    Shift + выделить, отпустить
+  Вставить:    правый клик > Paste / Ctrl+Shift+V
   ──────────────────────────────────────
   tmux: Ctrl+B, C  — новое окно
         Ctrl+B, N  — следующее окно
